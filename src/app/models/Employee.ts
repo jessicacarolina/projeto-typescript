@@ -148,11 +148,11 @@ export async function getPermissionEmployee(id: number): Promise<GetPermissionEm
             ON ep.fk_permission = p.id_permission
         WHERE fg_active = true AND fk_employee = $1;`;
 
-    const result = await conn.query(query, [id]);
+    const result: any = await conn.query(query, [id]);
 
     conn.release();
 
-    return result.rows[0];
+    return result.rows;
 }
 
 export async function deletePermissionEmployee(fk_employee: number,

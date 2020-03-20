@@ -10,6 +10,14 @@ interface GetIdDepartment {
     id_department: number;
 }
 
+interface GetAllEmployeesByIdDepartment {
+    id: number;
+    name:string;
+    cpf: string | undefined;
+    email: string;
+    salary: number;
+}
+
 export async function verifyDepartment(name: String): Promise<boolean> {
     const conn = await dbConnection.connect();
     const query = `
@@ -118,18 +126,17 @@ export async function updateDepartment(nm_department: string | undefined,
     return result.rows[0];
 }
 
-export async function getAllEmployees(id: number): Promise<{ id: number,
-    name:string, cpf: string | undefined, email: string, salary: number }> {
+export async function getAllEmployees(id: number): Promise<GetAllEmployeesByIdDepartment> {
     const conn = await dbConnection.connect();
 
     const query = `
-    SELECT *
+    SELECT name, email, salary, id_employee
     FROM tb_employee
     WHERE fk_department = $1;`;
 
-    const result = await conn.query(query, [id]);
+    const result: any = await conn.query(query, [id]);
 
     conn.release();
 
-    return result.rows[0];
+    return result.rows;
 }

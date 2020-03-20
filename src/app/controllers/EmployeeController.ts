@@ -112,11 +112,7 @@ class EmployeeController {
         const getPer = await getPermissionEmployee(id);
 
         if (getPer) {
-            return res.json({
-                data: {
-                    permissão: getPer.nm_permission,
-                },
-            });
+            return res.json({ data: getPer });
         }
 
         return res.json({ error: 'Employee does not have permissions' });
