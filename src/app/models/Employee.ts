@@ -24,13 +24,14 @@ export async function insertEmployee(
     surname: string,
     cpf: string,
     email: string,
-    salary: number
+    salary: number,
+    password: string,
 ): Promise<InsertEmployeeReturn> {
     const conn = await dbConnection.connect();
 
     const query = `
-        INSERT INTO tb_employee (fk_department, name, surname, cpf, email, salary, fg_active)
-        VALUES($1, $2, $3, $4, $5, $6, true);`;
+        INSERT INTO tb_employee (fk_department, name, surname, cpf, email, salary, fg_active, password)
+        VALUES($1, $2, $3, $4, $5, $6, true, $8);`;
 
     const result = await conn.query(query, [
         fk_department,
@@ -39,6 +40,7 @@ export async function insertEmployee(
         cpf,
         email,
         salary,
+        password,
     ]);
 
     conn.release();
@@ -190,15 +192,16 @@ export async function updateEmployee(
     cpf: string | undefined,
     email: string,
     salary: number,
+    password: string,
     id: number) {
     const conn = await dbConnection.connect();
 
     const query = `
     UPDATE tb_employee
-    SET name = $1, surname = $2, cpf = $3, email = $4, salary = $5
-    WHERE fg_active = true AND id_employee = $6`;
+    SET name = $1, surname = $2, cpf = $3, email = $4, salary = $5, password = $6
+    WHERE fg_active = true AND id_employee = $7`;
 
-    const result = await conn.query(query, [name, surname, cpf, email, salary, id]);
+    const result = await conn.query(query, [name, surname, cpf, email, salary, password, id]);
 
     conn.release();
 

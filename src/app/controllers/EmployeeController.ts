@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
 
 import {
     insertEmployee,
@@ -17,9 +18,13 @@ import { formataCPF } from '../../utils';
 
 class EmployeeController {
     public async insertEmployee(req: Request, res: Response): Promise<Response> {
-        const { fk_department, name, surname, cpf, email, salary } = req.body;
+        const { fk_department, name, surname, cpf, email, salary, password } = req.body;
 
         const formatar = formataCPF(cpf);
+
+        // if (!conn) { return res.status(500).send({ error: 'error'}) }
+
+        // const password_hash: string = await bcrypt.hash(req.body.password, 8)
 
         const employeeExists = await verifyEmployee(formatar, fk_department);
 
@@ -33,7 +38,8 @@ class EmployeeController {
             surname,
             formatar,
             email,
-            salary
+            salary,
+            password,
         );
 
         return res.json({
@@ -139,7 +145,7 @@ class EmployeeController {
             return res.status(400).json({ error: 'Employee does not exists.' });
         }
 
-        const { name, surname, cpf, email, salary } = req.body;
+        const { name, surname, cpf, email, salary, password } = req.body;
 
         const formatar = formataCPF(cpf);
 
@@ -149,6 +155,7 @@ class EmployeeController {
             formatar,
             email,
             salary,
+            password,
             id
         );
 
