@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import * as Yup from 'yup';
 
 import {
     insertEmployee,
@@ -12,25 +12,37 @@ import {
     getPermissionEmployee,
     updateEmployee,
     verifyUpdateEmployee,
-    deletePermissionEmployee,
+    deletePermissionEmployee, PasswordHash,
 } from '../models/Employee';
 import { formataCPF } from '../../utils';
 
 class EmployeeController {
     public async insertEmployee(req: Request, res: Response): Promise<Response> {
+        const schema = Yup.object().shape({
+            fk_department: Yup.number().required(),
+            name: Yup.string().required(),
+            surname: Yup.string().required(),
+            cpf: Yup.string().required(),
+            email: Yup.string().email().required(),
+            salary: Yup.number().required(),
+            password: Yup.string().required().min(6),
+        })
+
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: 'Validation fails' });
+        }
+
         const { fk_department, name, surname, cpf, email, salary, password } = req.body;
 
         const formatar = formataCPF(cpf);
-
-        // if (!conn) { return res.status(500).send({ error: 'error'}) }
-
-        // const password_hash: string = await bcrypt.hash(req.body.password, 8)
 
         const employeeExists = await verifyEmployee(formatar, fk_department);
 
         if (employeeExists) {
             return res.status(400).json({ error: 'Employee already exists.' });
         }
+
+        const password_hash: string = await PasswordHash(password)
 
         const employee = await insertEmployee(
             fk_department,
@@ -39,12 +51,13 @@ class EmployeeController {
             formatar,
             email,
             salary,
-            password,
+            password_hash,
         );
+
 
         return res.json({
             message: 'User successfully registered!',
-            employee,
+            employee
         });
     }
 
@@ -133,6 +146,20 @@ class EmployeeController {
     }
 
     public async updateEmployee(req: Request, res: Response): Promise<Response> {
+        const schema = Yup.object().shape({
+            fk_department: Yup.number(),
+            name: Yup.string(),
+            surname: Yup.string(),
+            cpf: Yup.string(),
+            email: Yup.string().email(),
+            salary: Yup.number(),
+            password: Yup.string().min(6),
+        })
+
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: 'Validation fails' });
+        }
+
         const id = parseInt(req.params.id);
 
         const upEmployee = await verifyUpdateEmployee(id);

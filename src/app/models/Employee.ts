@@ -1,5 +1,6 @@
-import dbConnection from '../../config/dbConnection';
+import bcrypt from 'bcrypt';
 
+import dbConnection from '../../config/dbConnection';
 interface GetEmployeeReturn {
     fk_department: number;
     id_employee: number;
@@ -30,8 +31,8 @@ export async function insertEmployee(
     const conn = await dbConnection.connect();
 
     const query = `
-        INSERT INTO tb_employee (fk_department, name, surname, cpf, email, salary, fg_active, password)
-        VALUES($1, $2, $3, $4, $5, $6, true, $8);`;
+        INSERT INTO tb_employee (fk_department, name, surname, cpf, email, salary, password, fg_active)
+        VALUES($1, $2, $3, $4, $5, $6, $7, true);`;
 
     const result = await conn.query(query, [
         fk_department,
@@ -47,6 +48,34 @@ export async function insertEmployee(
 
     return result.rows[0];
 }
+
+export async function PasswordHash(password:string): Promise<any> {
+    const password_hash: any = await bcrypt.hash(password, 8);
+    return password_hash;
+}
+
+export async function verifyPasswordMatch(password:any): Promise<boolean> {
+    const match =  bcrypt.compare(password, await PasswordHash(password));
+    if(match) {
+        return true;
+    }
+    else return false;
+}
+/* class VerifyPassword {
+    public async PasswordHash(password:any): Promise<any> {
+        const password_hash: any = await bcrypt.hash(password, 8)
+        return this;
+    }
+
+    public async verifyPasswordMatch(password:any): Promise<boolean> {
+        const match =  bcrypt.compare(password, await this.PasswordHash(password));
+        if(match) {
+            return true;
+        }
+        else return false;
+    }
+}
+export default new VerifyPassword(); */
 
 export async function verifyEmployee(cpf: string, fk_department: number): Promise<boolean> {
     const conn = await dbConnection.connect();
@@ -202,6 +231,21 @@ export async function updateEmployee(
     WHERE fg_active = true AND id_employee = $7`;
 
     const result = await conn.query(query, [name, surname, cpf, email, salary, password, id]);
+
+    conn.release();
+
+    return result.rows[0];
+}
+
+export async function employee(email: string): Promise<any> {
+    const conn = await dbConnection.connect();
+
+    const query = `
+        SELECT id_employee, name
+        FROM tb_employee
+        WHERE fg_active = true AND email = $1`;
+
+    const result = await conn.query(query, [email]);
 
     conn.release();
 

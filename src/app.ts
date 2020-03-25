@@ -3,6 +3,7 @@ import express from 'express';
 import depRoutes from './routes/departaments.routes';
 import empRoutes from './routes/employees.routes';
 import perRoutes from './routes/permission.routes';
+import sesRoutes from './routes/sessions.routes';
 
 class App {
     public express: express.Application
@@ -22,6 +23,7 @@ class App {
         this.express.use(depRoutes);
         this.express.use(empRoutes);
         this.express.use(perRoutes);
+        this.express.use(sesRoutes);
     }
 }
 

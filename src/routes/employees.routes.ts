@@ -1,10 +1,14 @@
 import { Router } from 'express';
 
 import EmployeeController from '../app/controllers/EmployeeController';
+import VerifyToken from '../utils';
 
 const empRoutes = Router();
 
 empRoutes.post('/employee', EmployeeController.insertEmployee);
+
+empRoutes.use(VerifyToken.validToken);
+
 empRoutes.get('/employee', EmployeeController.getAllEmployee);
 empRoutes.get('/employee/:id', EmployeeController.getEmployee);
 empRoutes.delete('/employee/:id', EmployeeController.deleteEmployee);
