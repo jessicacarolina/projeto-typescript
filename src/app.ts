@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 import depRoutes from './routes/departaments.routes';
 import empRoutes from './routes/employees.routes';
@@ -16,6 +17,7 @@ class App {
     }
 
     private middlewares():void {
+        this.express.use(cors());
         this.express.use(express.json());
     }
 

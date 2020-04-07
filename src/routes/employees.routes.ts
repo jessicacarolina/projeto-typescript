@@ -7,22 +7,20 @@ const empRoutes = Router();
 
 empRoutes.post('/employee', EmployeeController.insertEmployee);
 
-empRoutes.use(VerifyToken.validToken);
-
-empRoutes.get('/employee', EmployeeController.getAllEmployee);
-empRoutes.get('/employee/:id', EmployeeController.getEmployee);
-empRoutes.delete('/employee/:id', EmployeeController.deleteEmployee);
-empRoutes.put('/employee/:id', EmployeeController.updateEmployee);
+empRoutes.get('/employee', VerifyToken.validToken, EmployeeController.getAllEmployee);
+empRoutes.get('/employee/:id', VerifyToken.validToken, EmployeeController.getEmployee);
+empRoutes.delete('/employee/:id', VerifyToken.validToken, EmployeeController.deleteEmployee);
+empRoutes.put('/employee/:id', VerifyToken.validToken, EmployeeController.updateEmployee);
 empRoutes.post(
-    '/employee/:fk_employee/permissions/:fk_permission',
+    '/employee/:fk_employee/permissions/:fk_permission', VerifyToken.validToken,
     EmployeeController.insertPermissionEmployee
 );
 empRoutes.get(
-    '/employee/:id/permissions',
+    '/employee/:id/permissions', VerifyToken.validToken,
     EmployeeController.getPermissionEmployee
 );
 empRoutes.delete(
-    '/employee/:fk_employee/permissions/:fk_permission',
+    '/employee/:fk_employee/permissions/:fk_permission', VerifyToken.validToken,
     EmployeeController.deletePermissionEmployee
 );
 export default empRoutes;

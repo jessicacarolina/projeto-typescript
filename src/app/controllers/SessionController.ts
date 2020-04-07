@@ -25,15 +25,14 @@ class SessionController {
             });
         }
         // passando por todas as verificações emitir o token de autenticação
-        const { id, name }  = await employee(email);
-
+        const { id_employee, name }  = await employee(email);
         return res.json({
             user: {
-                id,
+                id_employee,
                 name,
                 email,
             },
-            token: jwt.sign({ id }, authConfig.secret, {
+            token: jwt.sign({ id_employee }, authConfig.secret, {
                 expiresIn: authConfig.expireIn,
             }),
         });
