@@ -61,21 +61,6 @@ export async function verifyPasswordMatch(password:any): Promise<boolean> {
     }
     else return false;
 }
-/* class VerifyPassword {
-    public async PasswordHash(password:any): Promise<any> {
-        const password_hash: any = await bcrypt.hash(password, 8)
-        return this;
-    }
-
-    public async verifyPasswordMatch(password:any): Promise<boolean> {
-        const match =  bcrypt.compare(password, await this.PasswordHash(password));
-        if(match) {
-            return true;
-        }
-        else return false;
-    }
-}
-export default new VerifyPassword(); */
 
 export async function verifyEmployee(cpf: string, fk_department: number): Promise<boolean> {
     const conn = await dbConnection.connect();
@@ -171,7 +156,7 @@ export async function getPermissionEmployee(id: number): Promise<GetPermissionEm
     const conn = await dbConnection.connect();
 
     const query = `
-        SELECT fk_permission, nm_permission
+        SELECT fk_permission, nm_permission, ds_permission
         FROM tb_employee_permission ep
         INNER JOIN tb_permission p
             ON ep.fk_permission = p.id_permission
@@ -251,3 +236,4 @@ export async function employee(email: string): Promise<any> {
 
     return result.rows[0];
 }
+

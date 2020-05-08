@@ -3,12 +3,15 @@ module.exports = {
       es6: true,
       node: true,
     },
-    extends: ['airbnb-base', 'prettier'],
-    plugins: ['prettier'],
+    extends: ['airbnb-base', 'prettier',  "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"],
+    plugins: [ "@typescript-eslint",'prettier'],
     globals: {
       Atomics: 'readonly',
       SharedArrayBuffer: 'readonly',
     },
+    parser: "@typescript-eslint/parser",
     parserOptions: {
         'ecmaFeatures': {
             'experimentalObjectRestSpread': true,
@@ -42,15 +45,5 @@ module.exports = {
         'object-shorthand': ['error', 'methods']
     }
 }
-    /*
 
-      "import/no-extraneous-dependencies": [
-          "error", {
-              "devDependencies": false,
-              "optionalDependencies": false,
-              "peerDependencies": false,
-              "packageDir": "./"
-            }
-        ],
-      "no-unused-vars": ["error", { "argsIgnorePattern": "next"}]
-    },*/
+

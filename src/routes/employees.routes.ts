@@ -7,8 +7,9 @@ const empRoutes = Router();
 
 empRoutes.post('/employee', EmployeeController.insertEmployee);
 
-empRoutes.get('/employee', VerifyToken.validToken, EmployeeController.getAllEmployee);
-empRoutes.get('/employee/:id', VerifyToken.validToken, EmployeeController.getEmployee);
+empRoutes.get('/employee', EmployeeController.getAllEmployee);
+
+empRoutes.get('/employee/:id', EmployeeController.getEmployee);
 empRoutes.delete('/employee/:id', VerifyToken.validToken, EmployeeController.deleteEmployee);
 empRoutes.put('/employee/:id', VerifyToken.validToken, EmployeeController.updateEmployee);
 empRoutes.post(
