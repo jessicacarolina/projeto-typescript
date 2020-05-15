@@ -237,3 +237,18 @@ export async function employee(email: string): Promise<any> {
     return result.rows[0];
 }
 
+/* class VerifyPassword {
+    public async PasswordHash(password:any): Promise<any> {
+        const password_hash: any = await bcrypt.hash(password, 8)
+        return this;
+    }
+
+    public async verifyPasswordMatch(password:any): Promise<boolean> {
+        const match =  bcrypt.compare(password, await this.PasswordHash(password));
+        if(match) {
+            return true;
+        }
+        else return false;
+    }
+}
+export default new VerifyPassword(); */
